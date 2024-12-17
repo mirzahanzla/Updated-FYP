@@ -108,7 +108,7 @@ const Media = ({ status, contractID, totalPosts }) => {
       <div className="relative w-full mt-5 pb-10">
         <div className="px-5 flex flex-col">
           <div className="poppins-regular text-[10px] md:text-base">
-            <div className="mt-2 grid xs:grid-cols-2 xs:grid-rows-3 md:grid-cols-4 md:grid-rows-2 gap-y-4">
+            <div className="mt-2 grid xs:grid-cols-2   md:grid-cols-4  gap-4 space-x-10">
               <div>
                 <UploadDraft 
                   disabled={isUploadDisabled} 

@@ -5,6 +5,7 @@ import more from '../../../../../../public/Svg/More.svg';
 import { useNavigate } from 'react-router-dom';
 import ContractDetails from './ContractDetails';
 import QueryReportModal from './query';
+import PostModal from './PostModal';
 
 const Dashboard = () => {
   const campaignData = useContext(CampaignContext);
@@ -88,23 +89,23 @@ const Dashboard = () => {
   const getStatusStyles = (status) => {
     switch (status) {
       case 'Invited':
-        return { borderColor: 'SilverButtonWithText', textColor: 'text-gray-500' };
+        return { borderColor: 'border-gray-500', textColor: 'text-gray-500' };
       case 'Accepted':
-        return { borderColor: 'GreenButtonWithText', textColor: 'text-green-500' };
+        return { borderColor: 'border-green-500', textColor: 'text-green-500' };
       case 'Reviewing':
-        return { borderColor: 'OrangeButtonBorder', textColor: 'text-primary' };
+        return { borderColor: 'border-primary', textColor: 'text-primary' };
       case 'Instructed':
-        return { borderColor: 'BlueButtonWithText', textColor: 'text-blue-500' };
+        return { borderColor: 'bg-blue-500', textColor: 'text-blue-500' };
       case 'Approved':
-        return { borderColor: 'GreenButtonWithText', textColor: 'text-green-500' };
+        return { borderColor: 'border-green-500', textColor: 'text-green-500' };
       case 'Awaiting InstaLink':
-        return { borderColor: 'OrangeButtonBorder', textColor: 'text-primary' };
+        return { borderColor: 'border-primary', textColor: 'text-primary' };
       case 'LinkSubmitted':
-        return { borderColor: 'OrangeButtonBorder', textColor: 'text-purple-500' };
+        return { borderColor: 'border-purple-500', textColor: 'text-purple-500' };
       case 'Payment Pending':
-        return { borderColor: 'SilverButtonWithText', textColor: 'text-gray-500' };
+        return { borderColor: 'border-gray-500', textColor: 'text-gray-500' };
       case 'Payment Processing':
-        return { borderColor: 'OrangeButtonBorder', textColor: 'text-orange-500' };
+        return { borderColor: 'border-orange-500', textColor: 'text-orange-500' };
       default:
         return { borderColor: 'border-gray-300', textColor: 'text-gray-300' };
     }
@@ -682,20 +683,34 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
       )}
 
       {showLinks && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg z-50">
-            <h2 className="text-lg font-bold">Links</h2>
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50  z-50">
+          <div className="bg-white p-8 rounded-lg max-w-md w-full ">
+            <div className="flex justify-end mr-4 h-[20px] cursor-pointer" onClick={() => setShowLinks(false)}>
+              <img src="/Svg/Close.svg" alt="Close" />
+            </div>
+            <p className="poppins-semibold text-[14px]">Link</p>
             {error ? (
               <p className="text-red-500">{error}</p>
             ) : (
               <ul>
+
                 {instaMediaLinks.length > 0 ? (
                   instaMediaLinks.map((link, index) => (
-                    <li key={index} className="text-blue-500 underline mb-2">
-                      <a href={link.postImageSrc} target="_blank" rel="noopener noreferrer">
-                        {link.postImageSrc}
-                      </a>
-                    </li>
+                    <>
+
+                      <div className='flex w-full'>
+
+                        <div key={index} className="text-[14px] mt-2 flex   w-full space-x-2 items-center">
+                          <input className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50 shrink-0" rows="4" placeholder="Write something..." value={link.postImageSrc}></input>
+                        </div>
+                        <a href={link.postImageSrc} className='mt-2' target='_blank'><img src="/Svg/Link.svg" alt="" className='mt-1' /></a>
+                      </div>
+                    </>
+                    // <li key={index} className="text-blue-500 underline mb-2">
+                    //   <a href={link.postImageSrc} target="_blank" rel="noopener noreferrer">
+                    //     {link.postImageSrc}
+                    //   </a>
+                    // </li>
                   ))
                 ) : (
                   <p>No links available for this contract.</p>
@@ -704,41 +719,50 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
             )}
 
             {/* Approve Contract Button */}
-            <button onClick={approveContract} className="mt-4 px-4 py-2 bg-green-500 text-white rounded">
-              Approve Contract
-            </button>
 
-            {/* Close Button */}
-            <button onClick={() => setShowLinks(false)} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-              Close
-            </button>
+            <div className="flex   justify-end gap-x-5  mt-5">
+              <div className="bg-primary hover:bg-white hover:text-primary rounded-lg text-white justify-center flex text-center cursor-pointer w-[110px] items-center leading-[1px] py-5" onClick={approveContract}>
+                <p>Approve</p>
+              </div>
+              <div className="border-primary border-[1px] text-primary hover:bg-white hover:text-primary rounded-lg justify-center flex text-center cursor-pointer w-[110px] items-center" onClick={() => setShowLinks(false)}>
+                <p>  Close</p>
+              </div>
+            </div>
+
+
+
           </div>
         </div>
-      )}
+      )
+      }
 
       {/* Confirmation Dialog */}
-      {showConfirmation && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white p-5 rounded shadow-lg">
-            <p>Are you sure you want to withdraw this contract?</p>
-            <div className="flex justify-end mt-4">
+      {
+        showConfirmation && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div className="bg-white p-5 rounded shadow-lg">
+              <p>Are you sure you want to withdraw this contract?</p>
+              <div className="flex justify-end mt-4">
 
-              <div className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg flex justify-center  mx-3 cursor-pointer" onClick={() => handleConfirmation(true)}>Send</div>
-              <div className="w-full text-primary  border-primary border-2 flex justify-center py-2 px-4 rounded-lg outline-2  mx-3 cursor-pointer" onClick={() => handleConfirmation(false)}>Close</div>
+                <div className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg flex justify-center  mx-3 cursor-pointer" onClick={() => handleConfirmation(true)}>Send</div>
+                <div className="w-full text-primary  border-primary border-2 flex justify-center py-2 px-4 rounded-lg outline-2  mx-3 cursor-pointer" onClick={() => handleConfirmation(false)}>Close</div>
 
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* Query Report Modal */}
-      {showQueryReportModal && (
-        <QueryReportModal
-          Id={contractID}
-          isOpen={showQueryReportModal}
-          onClose={() => setShowQueryReportModal(false)}
-        />
-      )}
+      {
+        showQueryReportModal && (
+          <QueryReportModal
+            Id={contractID}
+            isOpen={showQueryReportModal}
+            onClose={() => setShowQueryReportModal(false)}
+          />
+        )
+      }
 
       <div className="flex items-center justify-between w-full px-4">
         <div className="flex items-center size-[50px] sm:size-[60px]">
@@ -752,7 +776,15 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
         </div>
 
         <div className="w-[100px] sm:w-[140px] mdm:w-[160px] text-center">
-          <p className={`${ColorBorder} cursor-pointer ${TextColor}`}>{Status}</p>
+          <p className={`${ColorBorder} cursor-pointer ${TextColor}`} style={{
+    borderRadius: "1rem",
+    borderWidth: "1px",
+    paddingLeft: "0.75rem",
+    paddingRight: "0.75rem",
+    paddingTop: "0.25rem",
+    paddingBottom:" 0.25rem",
+    fontWeight: "400",
+    fontStyle: "normal"}}>{Status}</p>
         </div>
 
         <div className="flex-shrink-0 ml-4 relative">
@@ -769,62 +801,63 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
           )}
 
           {showPosts && (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-              <div className="bg-white p-5 rounded shadow-lg max-w-screen-lg w-full" style={{ maxHeight: posts.length > 5 ? '400px' : 'auto', overflowY: 'auto' }}>
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-bold">Posts</h2>
-                  <button onClick={() => setShowPosts(false)} className="text-gray-500 hover:text-gray-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="grid grid-cols-1 gap-4">
-                  {posts.length > 0 ? (
-                    posts.slice(0, 5).map(post => (
-                      <div key={post._id} className="flex flex-col items-center border p-2">
-                        <img src={post.imageLink} alt="Post" className="w-24 h-24 object-cover mb-2" />
-                        <p className="text-sm">{post.description}</p>
-                        <div className="flex mt-2">
-                          <button
-                            className="bg-green-500 text-white px-2 py-1 rounded mr-2"
-                            onClick={() => handleApprove(post._id)}>
-                            Approve
-                          </button>
-                          <button
-                            className="bg-blue-500 text-white px-2 py-1 rounded"
-                            onClick={() => {
-                              setSelectedPostId(post._id);
-                              setErrorMessage(''); // Clear previous error message
-                            }}>
-                            Instruct
-                          </button>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p>No posts available.</p>
-                  )}
-                </div>
-                {selectedPostId && (
-                  <div className="mt-4">
-                    <input
-                      type="text"
-                      value={instruction}
-                      onChange={(e) => setInstruction(e.target.value)}
-                      placeholder="Enter instructions"
-                      className="border border-gray-300 p-2 rounded w-full"
-                    />
-                    <button
-                      onClick={handleInstruct}
-                      className="bg-blue-500 text-white px-4 py-2 rounded mt-2">
-                      Submit Instruction
-                    </button>
-                    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                  </div>
-                )}
-              </div>
-            </div>
+            <PostModal setShowPosts={setShowPosts} posts={posts} handleApprove={handleApprove} setSelectedPostId={setSelectedPostId} setErrorMessage={setErrorMessage} />
+            // <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            //   <div className="bg-white p-5 rounded shadow-lg max-w-screen-lg w-full" style={{ maxHeight: posts.length > 5 ? '400px' : 'auto', overflowY: 'auto' }}>
+            //     <div className="flex justify-between items-center mb-4">
+            //       <h2 className="text-lg font-bold">Posts</h2>
+            //       <button onClick={() => setShowPosts(false)} className="text-gray-500 hover:text-gray-800">
+            //         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            //           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            //         </svg>
+            //       </button>
+            //     </div>
+            //     <div className="grid grid-cols-1 gap-4">
+            //       {posts.length > 0 ? (
+            //         posts.slice(0, 5).map(post => (
+            //           <div key={post._id} className="flex flex-col items-center border p-2">
+            //             <img src={post.imageLink} alt="Post" className="w-24 h-24 object-cover mb-2" />
+            //             <p className="text-sm">{post.description}</p>
+            //             <div className="flex mt-2">
+            //               <button
+            //                 className="bg-green-500 text-white px-2 py-1 rounded mr-2"
+            //                 onClick={() => handleApprove(post._id)}>
+            //                 Approve
+            //               </button>
+            //               <button
+            //                 className="bg-blue-500 text-white px-2 py-1 rounded"
+            //                 onClick={() => {
+            //                   setSelectedPostId(post._id);
+            //                   setErrorMessage(''); // Clear previous error message
+            //                 }}>
+            //                 Instruct
+            //               </button>
+            //             </div>
+            //           </div>
+            //         ))
+            //       ) : (
+            //         <p>No posts available.</p>
+            //       )}
+            //     </div>
+            //     {selectedPostId && (
+            //       <div className="mt-4">
+            //         <input
+            //           type="text"
+            //           value={instruction}
+            //           onChange={(e) => setInstruction(e.target.value)}
+            //           placeholder="Enter instructions"
+            //           className="border border-gray-300 p-2 rounded w-full"
+            //         />
+            //         <button
+            //           onClick={handleInstruct}
+            //           className="bg-blue-500 text-white px-4 py-2 rounded mt-2">
+            //           Submit Instruction
+            //         </button>
+            //         {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+            //       </div>
+            //     )}
+            //   </div>
+            // </div>
           )}
 
           {showDropdown && (
@@ -840,7 +873,7 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
       {/* Display success or error messages */}
       {successMessage && <p className="text-green-500">{successMessage}</p>}
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-    </div>
+    </div >
   );
 };
 

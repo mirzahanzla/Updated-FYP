@@ -11,6 +11,8 @@ const DraftUploadModal = ({ isOpen, onClose, contractID, onMediaUploaded }) => {
   const [loading, setLoading] = useState(false); // For loading state
   const [error, setError] = useState(null); // For error state
 
+  const [User,setUser]=useState(0)
+
   useEffect(() => {
     return () => {
       if (mediaPreview && mediaPreview.src) {
@@ -105,9 +107,11 @@ const DraftUploadModal = ({ isOpen, onClose, contractID, onMediaUploaded }) => {
           The organizer will then be notified about your submitted draft. Do not make a post before receiving approval.
         </p>
         <div className="flex w-[200px] sm:w-[300px] mx-auto sm:ml-10 mb-5">
-          <NavBarItems items={navItems} />
+          <NavBarItems items={navItems}  setUser={setUser}/>
         </div>
-        <div
+
+
+      {User===0?( <><div
           className={`border-dashed border-2 border-gray-300 rounded-lg h-32 flex items-center justify-center mb-4 text-gray-400 text-center flex-col ${dragging ? 'bg-gray-100' : ''}`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -159,6 +163,8 @@ const DraftUploadModal = ({ isOpen, onClose, contractID, onMediaUploaded }) => {
             {loading ? 'Uploading...' : 'Submit'}
           </button>
         </div>
+</>
+      ):  <label className="block text-gray-700 mb-2 text-lg text-center poppins-light mt-5" htmlFor="description">Coming Soon !</label>}
       </div>
     </div>
   );

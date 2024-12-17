@@ -118,21 +118,12 @@ const WorkContent = () => {
           <SimpleCard newPosts={`${totalPosts} Posts Required`} bg="BlueButtonWithText-v2" />
           <SimpleCard newPosts={`${milestones} Milestones Pending`} bg="OrangeButtonBorder-v2" />
 
-          {status === 'Awaiting InstaLink' && (
-            <div className="flex justify-end col-span-2 md:col-span-1 row-start-1 row-end-1">
-              <button
-                className="bg-blue-500 text-white py-2 px-4 rounded"
-                onClick={() => setShowModal(true)}
-              >
-                Submit Links
-              </button>
-            </div>
-          )}
+         
 
           {status === 'submitLink' && (
             <div className="flex justify-end col-span-2 md:col-span-1 row-start-1 row-end-1">
               <button
-                className="bg-blue-500 text-white py-2 px-4 rounded"
+                className="bg-primary text-white py-2 px-4 rounded"
                 onClick={() => setShowModal(true)}
               >
                 Submit
@@ -141,23 +132,42 @@ const WorkContent = () => {
           )}
         </div>
 
-        <div className="flex justify-start mt-5 ml-10 gap-x-3">
+      <div className='flex justify-between'>
+      <div className="flex justify-start mt-5 ml-10 gap-x-3">
           <Dropdown key={1} items={navItems} initialValue="All" />
         </div>
+        {status === 'Awaiting InstaLink' && (
+            <div className="flex col-span-2 md:col-span-1 ">
+              <div
+                className=" w-[120px] h-[50px]  poppins-regular mdm:w-[130px] mdm:h-[50px] rounded-2xl flex justify-center items-center OverViewBox1 bg-primary  text-white  text-[12px] tracking-[-0.02px]"
+                onClick={() => setShowModal(true)}
+              >
+                Submit Links
+              </div>
+            </div>
+          )}
+      </div>
 
         <Media status={status} contractID={contractID} totalPosts={totalPosts} />
 
         {showModal && (
-          <div className="modal fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg w-1/2">
-              <h2 className="text-lg font-bold mb-4">Submit Instagram Post Links</h2>
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50  z-50">
+            <div className="bg-white p-8 rounded-lg max-w-md w-full ">
+            <div className="flex justify-end mr-4 h-[20px] cursor-pointer " >
+            <img src="/Svg/Close.svg" alt="Close"    onClick={() => setShowModal(false)} />
+          </div>
+          <h2 className="text-2xl  mb-4">Submit Instagram Post Links</h2>
+              <h2 className="text-lg font-bold mb-4"></h2>
+
+             
 
               {postLinks.map((link, index) => (
                 <div key={index} className="mb-4">
-                  <label className="block text-sm font-medium">Instagram Post Link {index + 1}</label>
+                   <p className="text-gray-600 mb-2 text-[14px] ">
+                   Instagram Post Link  </p>
                   <input
                     type="text"
-                    className="border border-gray-300 p-2 rounded w-full"
+                    className="border border-gray-300 p-2 rounded w-full "
                     value={link}
                     onChange={(e) => handleLinkChange(index, e.target.value)}
                     placeholder={`Enter Instagram post link for post ${index + 1}`}
@@ -167,19 +177,21 @@ const WorkContent = () => {
 
               {error && <p className="text-red-500">{error}</p>}
 
-              <div className="flex justify-end mt-6">
-                <button
-                  className="bg-gray-500 text-white py-2 px-4 rounded mr-2"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="bg-blue-500 text-white py-2 px-4 rounded"
+              
+              <div className="flex justify-end mt-6 space-x-5">
+              <div
+                  className="bg-primary text-white py-2 px-4 rounded"
                   onClick={handleSubmitLinks}
                 >
                   Submit
-                </button>
+                </div>
+                <div
+                  className="bg-white border-primary border-[1px] text-primary py-2 px-4 rounded mr-2"
+                  onClick={() => setShowModal(false)}
+                >
+                  Cancel
+                </div>
+               
               </div>
             </div>
           </div>
@@ -205,13 +217,13 @@ const Dropdown = ({ items, initialValue }) => {
   return (
     <div className="flex items-center flex-col poppins-semibold rounded-xl bg-white relative text-[9px] xs:text-[10px] sm:text-[13px] md:text-[12px]">
       <div
-        className="px-2 py-1 sm:p-2 flex justify-between w-[100px] sm:w-[120px] items-center relative"
+        className="px-2  sm:p-2 flex justify-between w-[100px] sm:w-[120px] items-center relative h-full"
         onClick={() => setIsOpen([!isOpen[0], isOpen[1]])}
       >
         <div>{isOpen[1]}</div>
         <DropdownSvg />
       </div>
-      {isOpen[0] && (
+      {isOpen[0] ? (
         <ul className="poppins-regular flex gap-y-2 flex-col mt-2 absolute top-10 bg-white w-full p-2 rounded-xl">
           {items.map((item, index) =>
             isOpen[1] !== item ? (
@@ -221,7 +233,7 @@ const Dropdown = ({ items, initialValue }) => {
             ) : null
           )}
         </ul>
-      )}
+      ):""}
     </div>
   );
 };

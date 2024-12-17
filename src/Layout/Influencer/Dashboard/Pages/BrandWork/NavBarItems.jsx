@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const NavBarItems = ({ items }) => {
+const NavBarItems = ({ items ,setUser }) => {
   const [isHover, setIsHover] = useState(-1);
   const [isActive, setIsActive] = useState(0);
 
@@ -14,7 +14,7 @@ const NavBarItems = ({ items }) => {
           className="poppins-semibold relative z-50 w-full text-[9px] xs:text-[10px] sm:text-[13px] md:text-[11px] text-center px-2 py-2 sm:py-2 cursor-pointer list-none"
           onMouseEnter={() => setIsHover(index)}
           onMouseLeave={() => setIsHover(-1)}
-          onClick={() => setIsActive(index)}
+          onClick={() => { setIsActive(index) ; setUser(index) }}
         >
           <li className={`${isHover === index ? 'text-primary' : ''} ${isActive === index ? 'text-white' : ''}`}>
             <p>{item}</p>

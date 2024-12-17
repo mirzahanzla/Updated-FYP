@@ -72,7 +72,7 @@ const ProfileMedia = ({ PostImageSrc, ProfileImage, name, Likes, Comments }) => 
     <>
       <div className="text-[10px] lg:text-[12px] sm:w-[250px] sm:h-[370px] mdm:w-[150px] mdm:h-[250px] bg-white rounded-2xl flex flex-col OverViewBox1 justify-self-center">
         <div className="w-[150px] rounded-xl overflow-hidden">
-          <div className="h-[150px] rounded-lg flex items-center">
+          <div className="h-[190px] rounded-lg flex items-center">
             <img className="aspect-square ProfileMedia" src={PostImageSrc} alt="" />
           </div>
 
