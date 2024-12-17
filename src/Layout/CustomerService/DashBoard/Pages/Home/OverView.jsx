@@ -35,6 +35,8 @@ const OverViewLayout = ({ data }) => {
   const url = `${import.meta.env.VITE_SERVER_BASE_URL}`;
 
   const { data:data2, loading, error } = useFetch(`${url}/Support/api/months`);
+  console.log("data is ")
+  console.log(data2)
 
   console.log('data2is ')
   console.log(data2)

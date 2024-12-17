@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   userType: { type: String, required: true }, // Could be 'brand', 'influencer', etc.
   status: { type: Boolean, default: false },
-  verified: { type: Boolean },
+  verified: { type: Boolean,default:false },
   verificationAttachment: { type : String },
   uploaded: { type: Boolean },
   followedGroups: {

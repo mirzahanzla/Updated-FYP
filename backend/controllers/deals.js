@@ -289,8 +289,7 @@ export const getContractDetails = async (req, res) => {
 };
 
 export const acceptContract = async (req, res) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
+  
 
   try {
     // Extract the influencerID from the Authorization header
@@ -316,19 +315,17 @@ export const acceptContract = async (req, res) => {
     const { contractID } = req.params;
 
     // Find the contract by ID
-    const contract = await Contract.findById(contractID).session(session);
+    const contract = await Contract.findById(contractID);
     if (!contract) {
       console.error('Contract not found for ID:', contractID);
-      await session.abortTransaction();
-      session.endSession();
+     
       return res.status(404).json({ message: 'Contract not found' });
     }
 
     // Check if there are milestones in the contract
     if (contract.milestones.length === 0) {
       console.error('No milestones found for contract:', contractID);
-      await session.abortTransaction();
-      session.endSession();
+     
       return res.status(404).json({ message: 'No milestones found for this contract' });
     }
 
@@ -348,20 +345,19 @@ export const acceptContract = async (req, res) => {
     });
 
     // Save the new proposal to the database
-    const savedProposal = await newProposal.save({ session });
+    const savedProposal = await newProposal.save();
 
     // Update the contract to include the new proposal ID
     contract.proposalID = savedProposal._id; // Update the contract with the proposal ID
-    await contract.save({ session });
+    await contract.save();
 
     // Now update the deal document
     const dealID = contract.dealID; // Assuming dealID is part of the contract
-    const deal = await Deal.findById(dealID).session(session); // Find the deal by ID
+    const deal = await Deal.findById(dealID); // Find the deal by ID
 
     if (!deal) {
       console.error('Deal not found for ID:', dealID);
-      await session.abortTransaction();
-      session.endSession();
+     
       return res.status(404).json({ message: 'Deal not found' });
     }
 
@@ -376,22 +372,18 @@ export const acceptContract = async (req, res) => {
       deal.userStatuses[userStatusIndex].proposalID = savedProposal._id; // Save the proposal ID
     } else {
       console.error('Invited status not found for influencerID:', influencerID);
-      await session.abortTransaction();
-      session.endSession();
+      
       return res.status(404).json({ message: 'Invited status not found for influencer in userStatuses' });
     }
 
     // Save the updated deal
-    await deal.save({ session });
+    await deal.save();
 
-    // Commit the transaction
-    await session.commitTransaction();
-    session.endSession();
+   
 
     return res.status(200).json({ message: 'Contract accepted, deal updated, and proposal created successfully', contract, proposal: savedProposal });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
+
     console.error('Error accepting contract:', error);
     return res.status(500).json({ message: 'Server error' });
   }

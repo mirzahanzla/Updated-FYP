@@ -294,9 +294,54 @@ router.post('/contact', async (req, res) => {
     }
 });
 
+const generateRandomStatistics = () => {
+    return {
+        Contract: Math.floor(Math.random() * 100),
+        Payment: Math.floor(Math.random() * 100),
+        Account: Math.floor(Math.random() * 100),
+        Others: Math.floor(Math.random() * 100),
+        Pending: Math.floor(Math.random() * 50),
+        Resolved: Math.floor(Math.random() * 50),
+        Progress: Math.floor(Math.random() * 50),
+        month: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}`, // Random month in 2024
+    };
+};
+
+// Route to insert random data
+router.post('/add-random-data', async (req, res) => {
+    try {
+        // Generate an array of 5 random statistics
+        const randomData = Array.from({ length: 5 }, () => generateRandomStatistics());
+        
+        // Insert into the database
+        const result = await IssueStatistics.insertMany(randomData);
+        console.log("Random Data Inserted Successfully:", result);
+        
+        // Send a success response
+        res.status(201).json({
+            message: "Random data inserted successfully!",
+            insertedData: result
+        });
+    } catch (error) {
+        console.error("Error inserting random data:", error);
+        res.status(500).json({
+            message: "An error occurred while inserting random data",
+            error: error.message
+        });
+    } finally {
+        mongoose.connection.close(); // Close connection if required
+    }
+});
+
 
 // Route to fetch monthly data
 router.get('/api/months', async (req, res) => {
+
+
+
+
+
+
     try {
       // Fetch all statistics from the database
       const data = await IssueStatistics.find();

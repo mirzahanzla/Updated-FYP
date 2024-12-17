@@ -48,7 +48,7 @@ const Dashboard = () => {
           setInfluencers(updatedInfluencers);
         } else {
           console.warn("No influencer data available.");
-          setInfluencers([]); 
+          setInfluencers([]);
         }
 
         // Set the totalSpendings in state
@@ -120,7 +120,7 @@ const Dashboard = () => {
         <SimpleCard name="In Review" price={draftedCount} />
         <SimpleCard name="Instructed" price={instructedCount} />
       </div>
-  
+
       <div>
         {/* Showing all the Influencers here */}
         <div>
@@ -129,7 +129,7 @@ const Dashboard = () => {
             {/* Heading and outer Wrapper */}
             <div className="bg-white rounded-3xl px-4 py-5 mb-5">
               <p className="poppins-semibold mt-2">Contracts</p>
-  
+
               {/* Check if there are influencers */}
               {influencers.length > 0 ? (
                 influencers.map((influencer) => {
@@ -147,13 +147,13 @@ const Dashboard = () => {
                       contractID={influencer.contractID}
                       DealID={campaignData?._id}
                       postLinks={influencer.postLinks}
-                      budget={influencer.budget} 
-                      totalSpending={totalSpendings} 
+                      budget={influencer.budget}
+                      totalSpending={totalSpendings}
                       campaignBudget={campaignData?.budget}
                     />
                   );
                 })
-                ) : (
+              ) : (
                 <p className="text-center text-gray-500 mt-4">
                   No requests at this time. Invite influencers to connect.
                 </p>
@@ -163,7 +163,7 @@ const Dashboard = () => {
         </div>
       </div>
     </>
-  );  
+  );
 };
 
 const SimpleCard = ({ name, price }) => {
@@ -199,7 +199,7 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-    const menuRef = useRef(null);
+  const menuRef = useRef(null);
   const navigate = useNavigate();
 
 
@@ -209,17 +209,17 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
       // Check if the menuRef exists and does not contain the clicked target
       // Also check if the clicked target is not the "More" icon
       if (
-        menuRef.current && 
-        !menuRef.current.contains(event.target) 
-     
+        menuRef.current &&
+        !menuRef.current.contains(event.target)
+
       ) {
         setShowDropdown(false);
       }
     };
-  
+
     // Add event listener to document
     document.addEventListener("mousedown", handleClickOutside);
-  
+
     // Cleanup event listener
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -277,7 +277,7 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
       }
 
       const response = await axios.delete(
-        `/Brand/contracts/withdraw`, 
+        `/Brand/contracts/withdraw`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -340,7 +340,7 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
       } else {
         setErrorMessage('Failed to fetch contract details.');
       }
-    }finally {
+    } finally {
       setShowDropdown(false); // Close dropdown after action
     }
   };
@@ -356,7 +356,7 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
       console.log("Post Links: ", postLinks);
 
       // API request to fetch posts using the postLinks
-      const response = await axios.post('/Brand/sendPosts', {postLinks} );
+      const response = await axios.post('/Brand/sendPosts', { postLinks });
 
       // Set the posts in state
       setPosts(response.data.mediaPosts);
@@ -372,7 +372,7 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
     // API call to approve the post
     try {
       const response = await axios.put(`/Brand/approveMedia/${postId}`);
-  
+
       if (response.status === 200) {
         setSuccessMessage('Post approved successfully.');
         navigate('/Compaign');
@@ -386,13 +386,13 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
       }
     }
   };
-  
+
   const handleInstruct = async () => {
     if (!instruction) {
       setErrorMessage('Instruction cannot be empty.');
       return;
     }
-    
+
     // API call to instruct the post
     try {
       const response = await axios.put(`/Brand/instructMedia/${selectedPostId}`, { instructions: instruction });
@@ -414,18 +414,18 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
   const viewLinks = async () => {
     try {
       setShowLinks(true); // Show the pop-up screen
-  
+
       // Make API call to fetch instaMedia by contractID
       const response = await fetch(`/Brand/verifyLinks/${contractID}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Send auth token in headers
         },
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to fetch links');
       }
-  
+
       const data = await response.json();
 
       setInstaMediaLinks(data); // Store the fetched instaMedia in the state
@@ -434,10 +434,10 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
       console.error('Error fetching instaMedia links:', error);
       setError('Failed to fetch links. Please try again later.');
       setInstaMediaLinks([]); // Clear links if there's an error
-    }finally{
+    } finally {
       setShowDropdown(false);
     }
-  };  
+  };
 
   const approveContract = async () => {
     try {
@@ -448,11 +448,11 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
           Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Include the auth token
         },
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to approve contract');
       }
-  
+
       const data = await response.json();
       console.log('Contract approved:', data);
       setShowLinks(false); // Close the pop-up after approval
@@ -462,48 +462,48 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
       console.error('Error approving contract:', error);
       setError('Failed to approve contract. Please try again later.');
     }
-  };  
+  };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
 
     // Validate file type
     if (file && file.type.match(/image\/(png|jpeg|jpg)/)) {
-        setSelectedFile(file);
-        setFileError(false);
+      setSelectedFile(file);
+      setFileError(false);
     } else {
-        setFileError(true);
+      setFileError(true);
     }
   };
 
   const handleScreenShotSubmit = async () => {
     // Calculate the remaining budget for this campaign
     const remainingBudget = campaignBudget - totalSpending;
-  
+
     // Check if the current budget + totalSpendings is within the campaign budget
     if (budget + totalSpending > campaignBudget) {
       alert(`You have ${remainingBudget} left in your campaign budget, and the current budget exceeds it. Please adjust the budget.`);
       return; // Exit the function if the budget exceeds the limit
     }
-  
+
     // Proceed with submission if the budget is within limits
     if (!fileError) {
       const formData = new FormData();
-  
+
       // Append the file and contractID to the FormData
       formData.append('screenshot', selectedFile);
       formData.append('contractID', contractID);
-  
+
       try {
         setIsLoading(true); // Set loading state to true when starting upload
-  
+
         const response = await fetch('/Brand/uploadTransactionProof', {
           method: 'POST',
           body: formData,
         });
-  
+
         const data = await response.json();
-  
+
         if (response.ok) {
           console.log("Upload successful:", data);
           setShowPaymentOption(false);
@@ -520,11 +520,11 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
         setIsLoading(false); // Set loading state to false once the request is complete
       }
     }
-  };  
+  };
 
   const getDropdownOptions = () => {
     const options = [];
-  
+
     if (Status === 'Invited') {
       options.push(
         <div key="invitedOptions">
@@ -544,7 +544,7 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
         </div>
       );
     }
-  
+
     // Always add View Details option
     if (!(Status === 'Reviewing')) {
       options.push(
@@ -552,7 +552,7 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
           View Details
         </li>
       );
-   }
+    }
 
     options.push(
       <li key="message" className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
@@ -575,7 +575,7 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
         </li>
       );
     }
-  
+
     if (Status === 'Accepted' || Status === 'Instructed') {
       options.push(
         <li key="cancel" className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={handleCancelContract}>
@@ -586,17 +586,19 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
 
     if (Status === 'Payment Pending') {
       options.push(
-        <li key="uploadScreenshot" className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer" 
-        onClick={() =>{ setShowPaymentOption(true);
-         setShowDropdown(false)}
-         }>
+        <li key="uploadScreenshot" className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+          onClick={() => {
+            setShowPaymentOption(true);
+            setShowDropdown(false)
+          }
+          }>
           Upload Screenshot
         </li>
       );
     }
-  
+
     return options;
-  };  
+  };
 
   return (
     <div className="mt-5 relative">
@@ -604,54 +606,75 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
       {showPaymentOption && (
         (totalSpending + budget < campaignBudget) ? (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg z-60">
+
+
+
+
+            <div className='bg-white p-6 rounded-lg shadow-lg z-60 '>
+
               <h2 className="text-lg font-semibold mb-4">Pay and Upload Payment Screenshot</h2>
-              <div className="mb-2">
-                <p className="font-bold">Account Number:</p>
-                <p>03058761739</p> {/* Replace with your actual account number */}
-              </div>
-              <div className="mb-2">
-                <p className="font-bold">Bank Account Name:</p>
-                <p>Jazz cash</p> {/* Replace with your bank account name */}
-              </div>
-              <div className="mb-2">
-                <p className="font-bold">Account Holder Name:</p>
-                <p>Ali Saif</p> {/* Replace with account holder name */}
-              </div>
-              <div className="mb-2">
-                <p className="font-bold">Payable Amount:</p>
-                <p>${budget}</p>
-              </div>
-              <div className="mb-4">
-                <label className="block mb-2 font-bold">Upload Screenshot:</label>
-                <input 
-                  type="file" 
-                  className="border p-2 w-full mt-1" 
-                  accept="image/png, image/jpeg, image/jpg" 
-                  onChange={handleFileChange} 
-                />
-                {fileError && (
-                  <p className="text-red-500 mt-2">Please upload a valid image file (PNG or JPG).</p>
+              <div className="">
+                <div className="text-[14px] mt-5 ">
+                  <p className="poppins-semibold text-[14px]">Account Number:</p>
+                  <div className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50" rows="4" placeholder="Write something...">03058761739</div>
+                </div>
+
+                <div className="text-[14px]">
+                  <p className="poppins-semibold text-[14px]">Account Number:</p>
+                  <div className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50" rows="4" placeholder="Write something...">03058761739</div>
+                </div>
+
+                <div className="text-[14px]">
+                  <p className="poppins-semibold text-[14px]">Bank Account Name:</p>
+                  <div className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50" rows="4" placeholder="Write something...">Jazz cash</div>
+                </div>
+
+
+                <div className="text-[14px]">
+                  <p className="poppins-semibold text-[14px]">Account Holder Name:</p>
+                  <div className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50" rows="4" placeholder="Write something...">Ali Saif</div>
+                </div>
+
+
+                <div className="text-[14px]">
+                  <p className="poppins-semibold text-[14px]">Payable Amount:</p>
+                  <div className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50" rows="4" placeholder="Write something...">${budget}</div>
+                </div>
+
+
+
+
+                <div className="mb-4">
+                  <label className="poppins-semibold text-[14px]">Upload Screenshot:</label>
+                  <input
+                    type="file"
+                    className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50"
+                    accept="image/png, image/jpeg, image/jpg"
+                    onChange={handleFileChange}
+                  />
+                  {fileError && (
+                    <p className="text-red-500 mt-2">Please upload a valid image file (PNG or JPG).</p>
+                  )}
+                </div>
+                <div className="flex justify-end">
+
+
+                </div>
+                {isLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-60">
+                    <div className="text-white">Uploading, please wait...</div>
+                  </div>
                 )}
               </div>
-              <div className="flex justify-end">
-                <button className="bg-red-500 text-white px-4 py-2 rounded mr-2" onClick={() => setShowPaymentOption(false)}>
-                  Cancel
-                </button>
-                <button 
-                  className="bg-green-500 text-white px-4 py-2 rounded"
-                  onClick={handleScreenShotSubmit}
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Uploading...' : 'Submit'}
-                </button>
+              <div className="mt-4 flex justify-end">
+                <div className="bg-primary text-white  border-primary border-2 flex justify-center py-2 px-10 rounded-lg outline-[1]  mx-3 cursor-pointer" onClick={handleScreenShotSubmit}
+                  disabled={isLoading}> {isLoading ? 'Uploading...' : 'Submit'}</div>
+                <div className=" text-primary  border-primary border-2 flex justify-center py-2 px-4 rounded-lg outline-[1]  mx-3 cursor-pointer" onClick={() => setShowPaymentOption(false)}>Close</div>
               </div>
-              {isLoading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-60">
-                  <div className="text-white">Uploading, please wait...</div>
-                </div>
-              )}
             </div>
+
+
+
           </div>
         ) : (
           alert(`You have ${campaignBudget - totalSpending} left in your campaign budget. Please adjust the budget.`)
@@ -671,7 +694,7 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
                     <li key={index} className="text-blue-500 underline mb-2">
                       <a href={link.postImageSrc} target="_blank" rel="noopener noreferrer">
                         {link.postImageSrc}
-                      </a> 
+                      </a>
                     </li>
                   ))
                 ) : (
@@ -692,17 +715,17 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
           </div>
         </div>
       )}
-              
+
       {/* Confirmation Dialog */}
       {showConfirmation && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded shadow-lg">
             <p>Are you sure you want to withdraw this contract?</p>
             <div className="flex justify-end mt-4">
-           
+
               <div className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg flex justify-center  mx-3 cursor-pointer" onClick={() => handleConfirmation(true)}>Send</div>
               <div className="w-full text-primary  border-primary border-2 flex justify-center py-2 px-4 rounded-lg outline-2  mx-3 cursor-pointer" onClick={() => handleConfirmation(false)}>Close</div>
-             
+
             </div>
           </div>
         </div>
@@ -710,10 +733,10 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
 
       {/* Query Report Modal */}
       {showQueryReportModal && (
-        <QueryReportModal 
-          Id={contractID} 
-          isOpen={showQueryReportModal} 
-          onClose={() => setShowQueryReportModal(false)} 
+        <QueryReportModal
+          Id={contractID}
+          isOpen={showQueryReportModal}
+          onClose={() => setShowQueryReportModal(false)}
         />
       )}
 
@@ -763,12 +786,12 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
                         <img src={post.imageLink} alt="Post" className="w-24 h-24 object-cover mb-2" />
                         <p className="text-sm">{post.description}</p>
                         <div className="flex mt-2">
-                          <button 
+                          <button
                             className="bg-green-500 text-white px-2 py-1 rounded mr-2"
                             onClick={() => handleApprove(post._id)}>
                             Approve
                           </button>
-                          <button 
+                          <button
                             className="bg-blue-500 text-white px-2 py-1 rounded"
                             onClick={() => {
                               setSelectedPostId(post._id);
@@ -792,7 +815,7 @@ const InfluencerList = ({ ImageSrc, Name, age, ColorBorder, Status, TextColor, b
                       placeholder="Enter instructions"
                       className="border border-gray-300 p-2 rounded w-full"
                     />
-                    <button 
+                    <button
                       onClick={handleInstruct}
                       className="bg-blue-500 text-white px-4 py-2 rounded mt-2">
                       Submit Instruction

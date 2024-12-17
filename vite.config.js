@@ -12,6 +12,7 @@ const proxyConfig = {
   '/Newauth/auth': 'http://localhost:3000',
   '/report': 'http://localhost:3000',
   '/Support': 'http://localhost:3000',
+  // '/report/getReports': 'http://localhost:3000',
   // Add more proxies as needed based on your backend routes
 };
 

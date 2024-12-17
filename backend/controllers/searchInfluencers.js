@@ -16,14 +16,19 @@ export const searchInfluencers = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userID = decoded.id;
 
+    
+    
     // Check if the user is valid and of correct type (e.g., 'Brand')
     const user = await User.findById(userID).select('fullName userType');
-    if (!user || user.userType !== 'Brand') {
+    
+    if (!user || (user.userType !== 'Brand' && user.userType !== 'brand')) {
       return res.status(403).json({ message: 'Unauthorized access' });
     }
+    
 
     // Fetch the brand's network
     const brand = await Brand.findOne({ brandID: userID }).select('network').lean();
+
 
     // Initialize an empty array for influencer IDs
     let networkIDs = [];
@@ -44,6 +49,9 @@ export const searchInfluencers = async (req, res) => {
         .lean()
         .limit(20) // Limit to 20 influencers
         .exec();
+
+        console.log("influncer are ")
+        console.log(influencers)
     } else {
       // Query provided, filter influencers based on query
       const regex = new RegExp(query, 'i'); // Case-insensitive regex
@@ -57,11 +65,14 @@ export const searchInfluencers = async (req, res) => {
         .exec();
     }
 
+    console.log("user name is")
+    console.log(influencers)
     // Add status field to each influencer
     const influencersWithStatus = influencers.map(influencer => ({
       ...influencer,
       status: networkIDs.includes(influencer._id.toString()) ? 'inNetwork' : 'notInNetwork',
     }));
+
 
     // Set headers to prevent caching
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');

@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 
 const Response = () => {
-  const [brandData, setBrandData] = useState([]); 
-  const [filteredData, setFilteredData] = useState([]); 
-  const [userID, setUserID] = useState(null); 
+  const [brandData, setBrandData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [userID, setUserID] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [success, setSuccess] = useState(false);
 
@@ -16,13 +16,13 @@ const Response = () => {
     axios.get('/auth/getID', {
       headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
     })
-    .then(response => {
-      setUserID(response.data.userID);
-    })
-    .catch(error => {
-      console.error('Error fetching userID:', error);
-    });
-  }, []); 
+      .then(response => {
+        setUserID(response.data.userID);
+      })
+      .catch(error => {
+        console.error('Error fetching userID:', error);
+      });
+  }, []);
 
   useEffect(() => {
     const fetchDeals = async () => {
@@ -67,15 +67,15 @@ const Response = () => {
             )
           ),
         })).filter(brand => brand.deals.length > 0); // Remove brands with no deals
-  
+
         setFilteredData(filtered);
       }
     };
-  
+
     if (userID && brandData.length > 0) {
       filterDataByStatus();
     }
-  }, [selectedFilter, userID, brandData]);  
+  }, [selectedFilter, userID, brandData]);
 
   return (
     <>
@@ -85,42 +85,42 @@ const Response = () => {
         </div>
 
         <div className="mt-10 space-y-10 pb-10 text-[9px] xs:text-[10px] sm:text-[10px] md:text-[11px]">
-        {filteredData.length > 0 ? (
-          filteredData.map((brand, index) => (
-            brand.deals.map((deal, dealIndex) => (
-              deal.userStatuses.length > 0 ? (
-                deal.userStatuses.map((status, statusIndex) => (
-                  <Deal
-                    key={`${index}-${dealIndex}-${statusIndex}`} // Unique key for each deal and user status
-                    deal={{
-                      id: deal._id,
-                      brandImage: brand.brandImage,
-                      brandName: brand.brandName,
-                      dealImage: deal.dealImage,
-                      campaignDes: deal.campaignDes,
-                      category: deal.category,
-                      budget: deal.budget,
-                      userStatuses: deal.userStatuses,
-                      userID: userID,
-                    }}
-                    status={status} // Pass the current user status if needed
-                    onSuccess={handleDealSuccess} // Trigger success handler
-                  
-                  />
-                ))
-              ) : null // You can choose to render null if no user statuses exist
+          {filteredData.length > 0 ? (
+            filteredData.map((brand, index) => (
+              brand.deals.map((deal, dealIndex) => (
+                deal.userStatuses.length > 0 ? (
+                  deal.userStatuses.map((status, statusIndex) => (
+                    <Deal
+                      key={`${index}-${dealIndex}-${statusIndex}`} // Unique key for each deal and user status
+                      deal={{
+                        id: deal._id,
+                        brandImage: brand.brandImage,
+                        brandName: brand.brandName,
+                        dealImage: deal.dealImage,
+                        campaignDes: deal.campaignDes,
+                        category: deal.category,
+                        budget: deal.budget,
+                        userStatuses: deal.userStatuses,
+                        userID: userID,
+                      }}
+                      status={status} // Pass the current user status if needed
+                      onSuccess={handleDealSuccess} // Trigger success handler
+
+                    />
+                  ))
+                ) : null // You can choose to render null if no user statuses exist
+              ))
             ))
-          ))
-        ) : (
-          <p className="text-center">No deals available</p>
-        )}
+          ) : (
+            <p className="text-center">No deals available</p>
+          )}
         </div>
       </div>
     </>
   );
 };
 
-const NavBarItems = ({ items,  setSelectedFilter }) => {
+const NavBarItems = ({ items, setSelectedFilter }) => {
   const [isHover, setIsHover] = useState(-1);
   const [isActive, setIsActive] = useState(0);
 
@@ -140,9 +140,8 @@ const NavBarItems = ({ items,  setSelectedFilter }) => {
           onClick={() => handleItemClick(index, item)}
         >
           <li
-            className={`${isHover === index ? 'text-primary' : ''} ${
-              isActive === index ? 'text-white' : ''
-            }`}
+            className={`${isHover === index ? 'text-primary' : ''} ${isActive === index ? 'text-white' : ''
+              }`}
           >
             <p>{item}</p>
             {isActive === index && (
@@ -158,7 +157,7 @@ const NavBarItems = ({ items,  setSelectedFilter }) => {
   );
 };
 
-const Modal = ({ isOpen, onClose, contractDetails, deal, isRequested , onSuccess}) => {
+const Modal = ({ isOpen, onClose, contractDetails, deal, isRequested, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const receivingAmount = contractDetails.contractBudget * 0.9;
@@ -216,25 +215,46 @@ const Modal = ({ isOpen, onClose, contractDetails, deal, isRequested , onSuccess
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg p-5 w-11/12 max-w-lg">
-        <h2 className="text-lg font-bold mb-4">{deal.brandName}</h2>
-        <p>{deal.campaignDes}</p>
-        <p className="mt-2">Contract Budget: ${contractDetails.contractBudget}</p>
-        <p className="mt-2">You will receive: ${receivingAmount}</p>
-        <p className="mt-2">Contract Status: {contractDetails.status}</p>
-        <p className="mt-2">Category: {deal.category}</p>
+        {/* <h2 className="text-lg font-bold mb-4">{deal.brandName}</h2> */}
+        <p className="poppins-semibold text-[14px]">Description:</p>
+        <p className='className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50"'>{deal.campaignDes}</p>
+
+        <div className='grid grid-cols-2 gap-3'>
+        <div className="text-[14px] ">
+          <p className="poppins-semibold text-[14px]">Contract Budget:</p>
+          <div className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50" rows="4" placeholder="Write something...">${contractDetails.contractBudget}</div>
+          </div>
+        <div className="text-[14px] ">
+          <p className="poppins-semibold text-[14px]">You will receive:</p>
+          <div className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50" rows="4" placeholder="Write something...">${receivingAmount}</div>
+          </div>
+        <div className="text-[14px] ">
+          <p className="poppins-semibold text-[14px]">Contract Status:</p>
+          <div className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50" rows="4" placeholder="Write something...">${contractDetails.status}</div>
+          </div>
+        <div className="text-[14px] ">
+          <p className="poppins-semibold text-[14px]">Category:</p>
+          <div className="w-full border-[1px] rounded-lg px-3 py-2 text-black/50" rows="4" placeholder="Write something...">${deal.category}</div>
+          </div>
+        </div>
+
+        
 
         {error && <p className="text-red-500">{error}</p>} {/* Display error message */}
 
         <div className="mt-4 flex justify-end">
           {/* Show Accept button if status is 'Invited' and it is not a requested deal */}
           {contractDetails.status === 'Invited' && !isRequested && (
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-              onClick={handleAccept}
-              disabled={loading}
-            >
-              {loading ? 'Accepting...' : 'Accept'}
-            </button>
+            // <div
+            //   className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+            //   onClick={handleAccept}
+            //   disabled={loading}
+            // >
+            //   {loading ? 'Accepting...' : 'Accept'}
+            // </div>
+
+            <div className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg flex justify-center  mx-3 cursor-pointer" onClick={handleAccept}
+              disabled={loading}>{loading ? 'Accepting...' : 'Accept'}</div>
           )}
 
           {/* Show Withdraw button if it's a requested deal */}
@@ -248,9 +268,10 @@ const Modal = ({ isOpen, onClose, contractDetails, deal, isRequested , onSuccess
             </button>
           )}
 
-          <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={onClose}>
-            Close
-          </button>
+
+          <div className="w-full text-primary  border-primary border-2 flex justify-center py-2 px-4 rounded-lg outline-[1]  mx-3 cursor-pointer" onClick={onClose}>Close</div>
+
+
         </div>
       </div>
     </div>
@@ -310,7 +331,7 @@ const Deal = ({ deal, status, onSuccess }) => {
   const closeModal = () => {
     setModalOpen(false);
   };
-  
+
 
   return (
     <div className="flex xs:flex-col mdm:flex-row w-[250px] xs:w-[450px] sm:w-[550px] mdm:w-[600px] md:w-[700px] lg:w-[900px] mx-auto bg-white overflow-hidden rounded-xl">
@@ -339,11 +360,10 @@ const Deal = ({ deal, status, onSuccess }) => {
           </div>
           <div className="flex space-x-2">
             <div
-              className={`${
-                isRequested || isInvited
+              className={`${isRequested || isInvited
                   ? 'OrangeButtonBorder text-primary'
                   : 'SilverButtonWithText-v3'
-              } mt-2 xs:mt-0 flex items-center cursor-pointer`}
+                } mt-2 xs:mt-0 flex items-center cursor-pointer`}
             >
               <p>{isRequested ? 'Requested' : isInvited ? 'Invited' : 'Approved'}</p>
             </div>
@@ -356,14 +376,14 @@ const Deal = ({ deal, status, onSuccess }) => {
       </div>
 
       {/* Modal */}
-      <Modal 
-        isOpen={modalOpen} 
-        onClose={closeModal} 
-        contractDetails={contractDetails} 
-        loading={loadingContractDetails} 
+      <Modal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        contractDetails={contractDetails}
+        loading={loadingContractDetails}
         error={contractError} // Pass error to modal for display if needed
-        deal={deal} 
-        isRequested={isRequested} 
+        deal={deal}
+        isRequested={isRequested}
         onSuccess={onSuccess}
       />
     </div>

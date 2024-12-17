@@ -5,7 +5,7 @@ import User from '../models/user.js'; // Ensure User is imported from your Mongo
 
 export const uploadVerificationAttachment = async (req, res) => {
   const authHeader = req.headers.authorization;
-
+console.log("in the verificationo portal")
   // Authorization Header Check
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'Authorization token is missing or invalid' });

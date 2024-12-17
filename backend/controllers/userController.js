@@ -19,6 +19,7 @@ export const getUserData = async (req, res) => {
 
 export const getProfileData = async (req, res) => {
   try {
+   
     // Extract the token from the authorization header
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

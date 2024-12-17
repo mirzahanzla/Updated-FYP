@@ -10,23 +10,12 @@ const CreateCampaign = ({onClose}) => {
   const [platform, setPlatform] = useState('Instagram');
   const [engagementRate, setEngagementRate] = useState('');
   const [budget, setBudget] = useState('');
-  const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      setDealImage(file); // Save file object instead of base64
-    } else {
-      setError('Please upload a valid image file.');
-    }
-  };
 
   const handleImageDivClick = () => {
     fileInputRef.current.click();

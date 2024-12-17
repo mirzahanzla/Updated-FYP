@@ -296,7 +296,7 @@ const Settings = () => {
     try {
       const token = localStorage.getItem('authToken');  // Assuming the token is stored in localStorage
 
-      const response = await fetch('api/uploadVerificationAttachment', {
+      const response = await fetch('/api/uploadVerificationAttachment', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

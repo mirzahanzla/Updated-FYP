@@ -21,7 +21,9 @@ export const addCampaign = async (req, res) => {
 
     // Find user by ID
     const user = await User.findById(userID).select('fullName photo userType id');
-    if (!user || user.userType !== 'Brand') {
+    console.log("User is")
+    console.log(user)
+    if (!user || (user.userType !== 'Brand' && user.userType !== 'brand')) {
       return res.status(403).json({ message: 'Unauthorized access' });
     }
 

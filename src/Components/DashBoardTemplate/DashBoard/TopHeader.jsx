@@ -52,8 +52,10 @@ const TopHeader = ({ SideBar, setSideBar, Pages, activeButton }) => {
         console.error(error); // Handle error as needed
       }
     };
-
-    fetchUserData(); // Call the function to fetch user data
+ if(influencerCookie!=='C'){
+  fetchUserData(); // Call the function to fetch user data
+ }
+    
   }, []); // Empty dependency array to run only once on mount
 
   const toggleDropdown = () => {

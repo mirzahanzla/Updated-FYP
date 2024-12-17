@@ -138,9 +138,7 @@ const registerTransaction = async (estimatedReleaseDate, dealID, influencerID, a
 };
 
 export const addContract = async (req, res) => {
-  const session = await mongoose.startSession();
-  session.startTransaction(); // Start the session transaction
-
+ 
   try {
     const authHeader = req.headers.authorization; // Authorization token
 
@@ -165,7 +163,7 @@ export const addContract = async (req, res) => {
     }
 
     // Find the deal by ID
-    const deal = await Deal.findById(dealID).session(session);
+    const deal = await Deal.findById(dealID);
     if (!deal) {
       return res.status(404).json({ message: 'Deal not found' });
     }
@@ -184,15 +182,13 @@ export const addContract = async (req, res) => {
       });
 
       // Save each contract to the database within the session
-      const savedContract = await newContract.save({ session });
+      const savedContract = await newContract.save( );
       contracts.push(savedContract); // Add each saved contract to the array
 
-      // Register the transaction
-      await registerTransaction(milestones.deadline, dealID, influencer, milestones.budget, savedContract._id, session);
-
+      await registerTransaction(milestones.deadline, dealID, influencer, milestones.budget, savedContract._id);
       // Create and save notification for each influencer
       const message = `You have been invited to a new contract for deal ID: ${dealID}`;
-      let notification = await Notification.findOne({ userID: influencer }).session(session);
+      let notification = await Notification.findOne({ userID: influencer });
       if (notification) {
         notification.notifications.push({
           contractID: savedContract._id,
@@ -207,7 +203,7 @@ export const addContract = async (req, res) => {
           }]
         });
       }
-      await notification.save({ session }); // Save the notification
+      await notification.save(); // Save the notification
 
       // Add contractID and status to deal's userStatuses for this influencer
       const userStatus = {
@@ -218,7 +214,7 @@ export const addContract = async (req, res) => {
       deal.userStatuses.push(userStatus); // Push to userStatuses in deal
 
       // Find the user email using influencerID
-      const user = await User.findById(influencer).session(session);
+      const user = await User.findById(influencer);
       const recipientEmail = user ? user.email : null;
 
       if (recipientEmail) {
@@ -231,10 +227,9 @@ export const addContract = async (req, res) => {
     }
 
     // Save the updated deal with contractIDs in userStatuses within the session
-    await deal.save({ session });
+    await deal.save();
 
     // Commit the transaction if everything is successful
-    await session.commitTransaction();
 
     // Send response back with all created contracts
     res.status(201).json({
@@ -245,14 +240,13 @@ export const addContract = async (req, res) => {
   } catch (error) {
     console.error('Error details:', error);
     // If there is an error, abort the transaction
-    await session.abortTransaction();
     if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({ message: 'Invalid or expired token' });
     }
     res.status(500).json({ message: error.message || 'Server error, unable to create contracts' });
   } finally {
     // End the session
-    session.endSession();
+   
   }
 };
 
@@ -651,8 +645,7 @@ export const sendPosts = async (req, res) => {
 };
 
 export const approveContract = async (req, res) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
+ 
 
   try {
     const { contractID } = req.params;
@@ -662,17 +655,17 @@ export const approveContract = async (req, res) => {
     }
 
     // Step 2: Find the contract by contractID
-    const contract = await Contract.findById(contractID).session(session);
+    const contract = await Contract.findById(contractID);
 
     if (!contract) {
-      await session.abortTransaction();
+
       return res.status(404).json({ message: 'Contract not found.' });
     }
 
     // Step 3: Get the last milestone
     const milestones = contract.milestones;
     if (!milestones || milestones.length === 0) {
-      await session.abortTransaction();
+
       return res.status(400).json({ message: 'No milestones found for this contract.' });
     }
 
@@ -683,10 +676,10 @@ export const approveContract = async (req, res) => {
 
     // Step 5: Find the user by influencerID from the contract
     const influencerID = contract.influencerID;
-    const user = await User.findById(influencerID).session(session);
+    const user = await User.findById(influencerID);
 
     if (!user) {
-      await session.abortTransaction();
+  
       return res.status(404).json({ message: 'User not found for the given influencer ID.' });
     }
 
@@ -694,13 +687,9 @@ export const approveContract = async (req, res) => {
     const budgetToAdd = lastMilestone.budget * 0.9; // 90% of the last milestone budget
     user.earnings = (user.earnings || 0) + budgetToAdd;
 
-    // Step 7: Save both the contract and user inside the transaction
-    await contract.save({ session });
-    await user.save({ session });
+ 
 
-    // Step 8: Commit the transaction
-    await session.commitTransaction();
-    session.endSession();
+    
 
     // Step 9: Send success response
     return res.status(200).json({
@@ -708,8 +697,7 @@ export const approveContract = async (req, res) => {
       milestone: lastMilestone,
     });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
+ 
     console.error('Error approving contract:', error);
     return res.status(500).json({ message: 'Server error', error: error.message });
   }
