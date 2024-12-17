@@ -42,13 +42,13 @@ const TaskTableContactUs = ({ DATA, pagination, setPagination, pageCount, totalU
     console.log("Selected row data is:", selectedRows);
 
     // Extract customerServiceID from the selected rows
-    const idsToDelete = Object.values(selectedRows).map(row => row.customerServiceID); // Map to get only the IDs
+    const idsToDelete = Object.values(selectedRows).map(row => row._id); // Map to get only the IDs
 
     try {
       const url = `${import.meta.env.VITE_SERVER_BASE_URL}`;
 
       // Make a POST request to the server with the customerServiceIDs to delete
-      const response = await fetch(`${url}/DeleteRow`, {
+      const response = await fetch(`${url}/Support/Contact/delete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

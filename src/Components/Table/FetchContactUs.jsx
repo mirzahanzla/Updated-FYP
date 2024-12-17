@@ -7,6 +7,7 @@ import TaskTablePayment from './TaskTablePayment';
 import TaskTableInfluencer from './TaskTableInfluencer';
 import TaskTableWithDraw from './TaskTableWithDraw';
 import TaskTableContactUs from './TaskTableContactUs';
+import FiltersContact from './FiltersContact';
 
 // Status constants
 const STATUS_PENDING = { id: 1, name: "pending" };
@@ -32,12 +33,13 @@ const FetchContactUs = () => {
     setLoading(true); // Set loading state to true when fetching starts
 
     try {
-      const url = `${import.meta.env.VITE_SERVER_BASE_URL}/support/contacts`;
+     
+      const url = `${import.meta.env.VITE_SERVER_BASE_URL}/Support/Contact?page=${pagination.pageIndex + 1}&search=${searchTerm}`;
       const response = await fetch(url);
       const result = await response.json();
   
 
-      setData([result]);
+      setData([result.data]);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -67,7 +69,7 @@ const FetchContactUs = () => {
       <div className='text-[9px] sm:text-[10px] mdm:text-[12px] flex justify-center flex-col items-center montserrat poppins-regular mt-5 mb-10 w-full'>
         <div className="bg-white p-4 rounded-xl lg:w-[800px]">
           {/* Always show Filters component */}
-          <Filters searchTerm={searchTerm} setSearchTerm={setSearchTerm} setFilterValue={setFilterValue} />
+          <FiltersContact searchTerm={searchTerm} setSearchTerm={setSearchTerm} setFilterValue={setFilterValue} />
 
           <div className='mt-2'>
             {/* Conditional rendering for loading state */}

@@ -37,16 +37,17 @@ const TaskTablePayment = ({ DATA, pagination, setPagination, pageCount, totalUse
 
   // Function to remove selected rows
   const removeSelectedRows = async () => {
-    console.log("Selected row data is:", selectedRows);
+    
 
     // Extract customerServiceID from the selected rows
-    const idsToDelete = Object.values(selectedRows).map(row => row.customerServiceID); // Map to get only the IDs
+    const idsToDelete = Object.keys(selectedRows).map(row => data[row]).map(row =>row._id); // Map to get only the IDs
+    console.log("Selected row data is:", idsToDelete);
 
     try {
       const url = `${import.meta.env.VITE_SERVER_BASE_URL}`;
 
       // Make a POST request to the server with the customerServiceIDs to delete
-      const response = await fetch(`${url}/DeleteRow`, {
+      const response = await fetch(`${url}/Support/Payment/delete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

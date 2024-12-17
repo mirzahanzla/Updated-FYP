@@ -144,6 +144,75 @@ router.get('/issues', async (req, res) => {
     }
 });
 
+router.get('/Contact', async (req, res) => {
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = 6; // 6 issues per page
+    const startIndex = (page - 1) * limit;
+
+    const searchValue = (req.query.search || '').trim(); // Trim input
+    const filterValue = req.query.filter || ''; // Filter value
+
+    let queryConditions = {};
+
+    // Add search conditions
+    if (searchValue) {
+        queryConditions.$or = [
+            { email: { $regex: searchValue, $options: 'i' } },
+            { companyName: { $regex: searchValue, $options: 'i' } }
+        ];
+    }
+
+    // Add filter conditions
+    if (filterValue) {
+        queryConditions.status = filterValue; // Apply filter based on issue status
+    }
+
+    try {
+        console.log('Query Conditions:', queryConditions); // Debugging
+        const totalIssues = await ContactUs.countDocuments(queryConditions);
+
+        const issues = await ContactUs.find(queryConditions)
+            .skip(startIndex)
+            .limit(limit)
+            .exec();
+
+        res.json({
+            currentPage: page,
+            totalPages: Math.ceil(totalIssues / limit),
+            totalIssues: totalIssues,
+            data: issues
+        });
+    } catch (error) {
+        console.error('Error fetching issues:', error);
+        res.status(500).json({ message: 'Failed to fetch issues' });
+    }
+});
+
+router.post('/Contact/delete', async (req, res) => {
+    const { customerServiceIDs } = req.body;
+    console.log("Customer Service is ")
+    console.log(customerServiceIDs)
+
+    if (!Array.isArray(customerServiceIDs) || customerServiceIDs.length === 0) {
+        return res.status(400).json({ message: 'Invalid customerServiceIDs array' });
+    }
+
+    try {
+        // Delete multiple documents by matching the IDs
+        const deletedIssues = await ContactUs.deleteMany({ _id: { $in: customerServiceIDs } });
+
+        if (deletedIssues.deletedCount === 0) {
+            return res.status(404).json({ message: 'No issues found for the provided IDs' });
+        }
+
+        res.status(200).json({
+            message: 'Issues deleted successfully',
+            deletedCount: deletedIssues.deletedCount,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting issues', error: error.message });
+    }
+});
 
 
 
@@ -534,6 +603,31 @@ router.get('/getAllPayment', async (req, res) => {
     } catch (error) {
         console.error('Error fetching transactions:', error);
         res.status(500).json({ message: 'Failed to retrieve transactions' });
+    }
+});
+
+router.post('/Payment/delete', async (req, res) => {
+    const { customerServiceIDs } = req.body;
+    console.log("Customer Service is ")
+    console.log(customerServiceIDs)
+
+    if (!Array.isArray(customerServiceIDs) || customerServiceIDs.length === 0) {
+        return res.status(400).json({ message: 'Invalid customerServiceIDs array' });
+    }
+
+    try {
+        const deletedIssues = await transaction.deleteMany({ _id: { $in: customerServiceIDs } });
+
+        if (deletedIssues.deletedCount === 0) {
+            return res.status(404).json({ message: 'No issues found for the provided IDs' });
+        }
+
+        res.status(200).json({
+            message: 'Issues deleted successfully',
+            deletedCount: deletedIssues.deletedCount,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting issues', error: error.message });
     }
 });
 

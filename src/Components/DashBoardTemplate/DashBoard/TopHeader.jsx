@@ -148,10 +148,12 @@ const TopHeader = ({ SideBar, setSideBar, Pages, activeButton }) => {
             </div>
             {/* Profile picture and Notification Icon are displayed here */}
             <div className='relative'>
-              <div className='flex justify-between w-[100px]' >
+        
+            {userSetting && (influencerCookie === 'C')&&      <div className='flex justify-between w-[100px]' >
                 <img src="/Svg/Notification.svg" alt="Notification" onClick={() => {  setNotification(true) ;setIsDropdownOpen(false) }} />
                 <img className='w-[45px] h-[45px] Avatar rounded-full' src={user?.photo} alt="Avatar" onClick={toggleDropdown} />
               </div>
+}
               {/* Dropdown for profile options */}
               {isDropdownOpen && (
                 <div

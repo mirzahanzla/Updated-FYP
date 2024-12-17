@@ -57,6 +57,11 @@ const FetchPaymentData = () => {
         status: mapStatus(issue.status),
       }));
 
+      const totalPaidAmount = result
+  .filter(obj => obj.status === "Paid") // Filter only Paid objects
+  .reduce((sum, obj) => sum + obj.amount, 0); // Sum up the amounts
+
+console.log("Total Paid Amount:", totalPaidAmount);
 
 
       setData([results, result.totalPages, result.totalUsers]);
@@ -91,7 +96,7 @@ const FetchPaymentData = () => {
       <div className='text-[9px] sm:text-[10px] mdm:text-[12px] flex justify-center flex-col items-center montserrat poppins-regular mt-5 mb-10 w-full'>
         <div className="bg-white p-4 rounded-xl lg:w-[800px]">
           {/* Always show Filters component */}
-          <Filters searchTerm={searchTerm} setSearchTerm={setSearchTerm} setFilterValue={setFilterValue} />
+          {/* <Filters searchTerm={searchTerm} setSearchTerm={setSearchTerm} setFilterValue={setFilterValue} /> */}
 
           <div className='mt-2'>
             {/* Conditional rendering for loading state */}

@@ -47,14 +47,6 @@ const Queries = () => {
           {/* Left border */}
           <div className=" border-l-2  h-[30px]"></div>
 
-          <div className="pl-1 mdm:pl-10  flex flex-col items-center ">
-            <p className="text-black/50 poppins-regular text-[7px] sm:text-[10px] mdm:text-[12px] ">Progress</p>
-            <p className="poppins-semibold text-[7px] sm:text-[10px] mdm:text-[12px]">{data.Progress}</p>
-          </div>
-
-           {/* Left border */}
-          <div className=" border-l-2  h-[30px]"></div>
-
           <div className=" pl-1 mdm:pl-10 flex flex-col items-center text-[7px] sm:text-[10px] ">
             <p className="text-black/50 poppins-regular  mdm:text-[12px]">Pending</p>
             <p className="poppins-semibold mdm:text-[12px]">{data.Pending}</p>
